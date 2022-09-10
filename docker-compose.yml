@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  sharp-resources:
+    image: node:latest
+    restart: always
+    command: sh -c "yarn run build && yarn run start"
+    ports:
+      - "5050:5050"
+    working_dir: /resources
+    volumes:
+      - ./:/resources
+    environment:
+      EXPRESS_PORT: 5050
+      MONGO_PORT: 27017
+      MONGO_USER: root
+      MONGO_PASS: password
+      PASSWORD_SALT: awoogahbingbong
+    depends_on:
+      - database
+  database:
+    image: mongo:latest
+    restart: always
+    volumes:
+      - resources-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+  
+volumes:
+  resources-data:
